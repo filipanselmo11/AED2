@@ -151,16 +151,16 @@ Grafo<T>::Grafo(int n){
 
 template <class T>
 void Grafo<T>::inicializa(int n){
-	if(this->n != 0){
+	/*if(this->n != 0){
 		destroy();
-	}
+	}*/
 	this->n = m;
 	adj = new Lista<Vertex>[n + 1];
 }
 
 template <class T>
 void Grafo<T>::insertEdge(Vertex u, Vertex v){
-	 T x = v;
+	T x = v;
 	adj[u].insere(x);
 	x = u;
 	adj[v].insere(x);
