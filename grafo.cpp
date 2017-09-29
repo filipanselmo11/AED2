@@ -80,6 +80,7 @@ void Lista<T>::insere(T it){
 
 template <class T>
 void Lista<T>::mostra(){
+	//cout << "mostra!!" << endl;
 	No<T> *nav = prim->getProx();
 	while(nav != NULL){
 		cout << nav->getIt() << " ";
@@ -154,7 +155,7 @@ void Grafo<T>::inicializa(int n){
 	/*if(this->n != 0){
 		destroy();
 	}*/
-	this->n = m;
+	this->n = n;
 	adj = new Lista<Vertex>[n + 1];
 }
 
@@ -169,11 +170,10 @@ void Grafo<T>::insertEdge(Vertex u, Vertex v){
 
 template <class T>
 void Grafo<T>::print(){
-	for(int i = 1; i <= n; i++){
+	for(int i = 1; i < n; i++){
 		cout << "v[" << i << "]= ";
 		adj[i].mostra();
 	}
-	cout << endl;
 }
 
 void testaGrafo(Grafo<int> &g){
@@ -185,14 +185,14 @@ void testaGrafo(Grafo<int> &g){
 }
 
 int main(){
-	//Lista<int> l;
-	//l.insere(1);
-	//l.insere(2);
-	//l.insere(3);
-	//l.insere(4);
-	//l.insere(5);
-	//l.mostra();
-	/*
+	/*Lista<int> l;
+	l.insere(1);
+	l.insere(2);
+	l.insere(3);
+	l.insere(4);
+	l.insere(5);
+	l.mostra();
+	
 	No<int> *px = l.busca(5);
 	if(px == NULL){
 		cout << "Numero nao encotrado" << endl;
