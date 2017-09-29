@@ -2,6 +2,8 @@
 
 using namespace std;
 
+typedef int Vertex;
+
 template <class T>
 
 class No{
@@ -51,6 +53,7 @@ public:
 	void mostra();
 	void remove(T, No<T>*);
 	No<T> *busca(T);
+	void destroi();
 };
 
 template <class T>
@@ -110,15 +113,86 @@ void Lista<T>::remove(T it, No<T> *r){
 	delete r;
 }
 
-int main(){
-	Lista<int> l;
-	l.insere(1);
-	l.insere(2);
-	l.insere(3);
-	l.insere(4);
-	l.insere(5);
-	l.mostra();
+template <class T>
+void Lista<T>::destroi(){
+	No<T> *nav = prim->getProx();
+	while(nav != NULL){
+		delete(nav);
+	}
+	nav = nav->getProx();
+}
 
+template <class T>
+class Grafo{
+private:
+	Lista<Vertex> *adj;
+	int n,m;
+	void destroy();
+public:
+	Grafo(int);
+	void inicializa(int);
+	void insertEdge(Vertex, Vertex);
+	void print();
+};
+
+template <class T>
+void Grafo<T>::destroy(){
+	for(int i = 0; i <= n; i++){
+		adj[i].destroi();
+	}
+	delete (adj);
+	n = m = 0;
+}
+
+template <class T>
+Grafo<T>::Grafo(int n){
+	inicializa(n);
+}
+
+template <class T>
+void Grafo<T>::inicializa(int n){
+	if(this->n != 0){
+		destroy();
+	}
+	this->n = m;
+	adj = new Lista<Vertex>[n + 1];
+}
+
+template <class T>
+void Grafo<T>::insertEdge(Vertex u, Vertex v){
+	 T x = v;
+	adj[u].insere(x);
+	x = u;
+	adj[v].insere(x);
+	m++;
+}
+
+template <class T>
+void Grafo<T>::print(){
+	for(int i = 1; i <= n; i++){
+		cout << "v[" << i << "]= ";
+		adj[i].mostra();
+	}
+	cout << endl;
+}
+
+void testaGrafo(Grafo<int> &g){
+	g.insertEdge(1,2);
+	g.insertEdge(2,3);
+	g.insertEdge(3,4);
+	g.insertEdge(4,5);
+	g.print();
+}
+
+int main(){
+	//Lista<int> l;
+	//l.insere(1);
+	//l.insere(2);
+	//l.insere(3);
+	//l.insere(4);
+	//l.insere(5);
+	//l.mostra();
+	/*
 	No<int> *px = l.busca(5);
 	if(px == NULL){
 		cout << "Numero nao encotrado" << endl;
@@ -127,7 +201,11 @@ int main(){
 		cout << px->getIt() << endl;
 	}
 	l.remove(6,px);
-	l.mostra();
-
+	l.mostra();*/
+	int n,m;
+	cout << "ordem: ";
+	cin >> n;
+	Grafo<int> g(n);
+	testaGrafo(g);
 	return 0;
 }
