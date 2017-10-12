@@ -3,9 +3,14 @@
 using namespace std;
 
 typedef int Vertex;
+const int Branco = 0;
+const int Cinza = 1;
+const int Preto = 2;
+int tempo;
+//int d,f;
+//int cor;
 
 template <class T>
-
 class No{
 private:
 	T it;
@@ -122,26 +127,77 @@ void Lista<T>::destroi(){
 	}
 	nav = nav->getProx();
 }
+/*
+template <class T>
+class Pilha{
+private:
+	No<T> *topo;
+	No<T> *fundo;
+public:
+	Pilha(){
+		fundo = new No<T>;
+		fundo->setProx(NULL);
+		topo = fundo;
+	}
+	void empilha(T);
+	void mostra();
+	void desempilha(T);
+};
+
+template <class T>
+void Pilha<T>::empilha(T it){
+	No<T> *aux = new No<T>;
+	topo->setIt(it);
+	aux->setProx(topo);
+	topo = aux;
+}
+
+template <class T>
+void Pilha<T>::mostra(){
+
+}
+
+template <class T>
+No<T>*Pilha<T>::desempilha(T it){
+	No<T> *aux = topo;
+	topo = topo->getProx();
+	it = topo->getIt();
+	delete aux;
+	return it;
+}*/
 
 template <class T>
 class Grafo{
 private:
 	Lista<Vertex> *adj;
-	int n,m;
+	//Pilha<>
 	void destroy();
 public:
+	Lista<Vertex> *getAdj(){
+		return adj;
+	}
+	void setAdj(Lista<Vertex> *adj){
+		this->adj = adj;
+	}
+	int getN(){
+		return n;
+	}
+	int getM(){
+		return m;
+	}
 	Grafo(int);
 	void inicializa(int);
 	void insertEdge(Vertex, Vertex);
 	void print();
 };
 
+
 template <class T>
 void Grafo<T>::destroy(){
 	for(int i = 0; i <= n; i++){
 		adj[i].destroi();
 	}
-	delete (adj);
+	delete adj;
 	n = m = 0;
 }
 
@@ -175,15 +231,65 @@ void Grafo<T>::print(){
 		adj[i].mostra();
 	}
 }
-
+/*
 void testaGrafo(Grafo<int> &g){
 	g.insertEdge(1,2);
 	g.insertEdge(2,3);
 	g.insertEdge(3,4);
 	g.insertEdge(4,5);
 	g.print();
+}*/
+
+/*
+template <class T>
+void DFS(Grafo &g){
+	T *pred;
+	No<T> *p = g.getAdj()[u->Vertex].prim->getProx();
+	while(p != NULL){
+		u->cor = Branco;
+		pred = NULL;
+	}
+	tempo = 0;
+	while(){
+
+	}
+}*//*
+template <class T>
+void dfsVisita(Grafo<int> &g, T *u){
+	tempo = tempo + 1;
+	u->setD(tempo);
+	u->setCor(Cinza);
+	T *v;
+	No<T> *p = g.getAdj()[u];
+	while(p != NULL){
+		if(v->getCor() == Branco){
+			v->setPred(u);
+			dfsVisita(g,v);
+		}
+		p = p->getProx();
+	}
+	u->setCor(Preto);
+	tempo = tempo + 1;
+	u->setF(tempo);
+	//for()
 }
 
+template <class T>
+void DFS(Grafo<int> &g){
+	T *u;
+	No<T> *p = g.getAdj()[u];
+	while(p != NULL){
+		u->setCor(Branco);
+		u->setPred(NULL);
+		p = p->getProx();
+	}
+	tempo = 0;
+	while(p != NULL){
+		if(u->getCor() == Branco){
+			dfsVisita(g,u);
+		}
+	}
+}*/	
 int main(){
 	/*Lista<int> l;
 	l.insere(1);
@@ -206,6 +312,12 @@ int main(){
 	cout << "ordem: ";
 	cin >> n;
 	Grafo<int> g(n);
-	testaGrafo(g);
+	g.insertEdge(1,2);
+	g.insertEdge(2,3);
+	g.insertEdge(3,4);
+	g.print();
+	//dfsVisita(g,)
+	//testaGrafo(g);
+	DFS(g);
 	return 0;
 }

@@ -1,93 +1,68 @@
-#include <iostream>
-
-using namespace std;
+#include<iostream>
+#include<vector>
 
 typedef int Vertex;
 const int Branco = 0;
 const int Cinza = 1;
-const int Preto= 2;
+const int Preto = 2;
 int tempo;
 
-template <class T>
-class No{
-private:
-    T it;
-    No *prox;
-public:
-    No(T it){
-        this->it = it;
-        this->prox = NULL;
-    }
-    No(){
-       this->prox = NULL;
-    }
-    
-    T getIt(){
-        return it;
-    }
+using namespace std;
 
-    void setIt(T it){
-        this->it = it;
-    }
-
-    No *getProx(){
-        return prox;
-    }
-
-    void setProx(No *prox){
-        this->prox = prox;
-    }
-};
-
-template <class T>
+template<class T>
 class Lista{
 private:
-    No<T> *prim, *ult;
+    vector<T> lista;
+    int tam = 0;
 public:
-    No<T> *getPrim(){
-        return prim;
-    }
-    
-    No<T> *getUlt(){
-        return ult;
-    }
-
     Lista(){
-        prim = new No<T>;
-        prim->setProx(NULL);
-        ult = prim;
+    }
+    ~Lista(){
+        destroi();
     }
     void insere(T);
     void mostra();
     void destroi();
+    int getTAM(){
+        return tam;
+    }
+    int buscaV(Vertex);
 };
 
 template <class T>
 void Lista<T>::insere(T it){
-    ult->setProx(new No<T>);
-    ult = ult->getProx();
-    ult->setProx(NULL);
-    ult->setIt(it);
+    lista.push_back(it);
+    tam++;
 }
 
 template <class T>
 void Lista<T>::mostra(){
-    No<T> *nav = getPrim()->getProx();
-    while(nav != NULL){
-        cout << nav->getIt() << " ";
-        nav = nav->getProx();
+    for(int i = 0; i < lista.size(); i++){
+        cout << lista[i] << " ";
     }
+    cout << endl;
 }
 
 template <class T>
 void Lista<T>::destroi(){
-    No<T> *nav = getPrim()->getProx();
-    while(nav != NULL){
-        delete(nav);
-    }
-    nav = nav->getProx();
+    lista.clear();
+    lista.shrink_to_fit();
 }
 
+template <class T>
+int Lista<T>::buscaV(Vertex x){
+    int p;
+    int c = 1;
+    Vertex i;
+    while(p != 0){
+        if(c == x){
+            i = p;
+        }
+        c++;
+        p++;
+    }
+
+}
 
 template <class T>
 class Grafo{
@@ -96,34 +71,22 @@ private:
     int n,m;
     void destroy();
 public:
-    Lista<Vertex> *getAdj(){
-        return adj;
-    }
-
-    void setAdj(Lista<Vertex> *adj){
-        this->adj = adj;
-    }
+    Grafo(int);
+    void inicializa(int);
+    void insereAresta(Vertex,Vertex);
+    void print();
 
     int getN(){
         return n;
-    }
-
-    void setN(int n){
-        this->n = n;
     }
 
     int getM(){
         return m;
     }
 
-    void setM(int m){
-        this->m = m;
+    Lista<Vertex> *getAdj(){
+        return adj;
     }
-
-    Grafo(int);
-    void inicializa(int);
-    void insertEdge(Vertex,Vertex);
-    void print();
 };
 
 template <class T>
@@ -133,16 +96,16 @@ Grafo<T>::Grafo(int n){
 
 template <class T>
 void Grafo<T>::inicializa(int n){
-    /*if(this->n == 0){
-
-    }*/
+    if(this->n == 0){
+        destroy();
+    }
     this->n = n;
     adj = new Lista<Vertex>[n + 1];
 }
 
 template <class T>
-void Grafo<T>::insertEdge(Vertex u, Vertex v){
-    T x = v;
+void Grafo<T>::insereAresta(Vertex u, Vertex v){
+    Vertex x = v;
     adj[u].insere(x);
     x = u;
     adj[v].insere(x);
@@ -152,99 +115,63 @@ void Grafo<T>::insertEdge(Vertex u, Vertex v){
 template <class T>
 void Grafo<T>::print(){
     for(int i = 1; i <= getN(); i++){
-        cout << "v[" << i <<"] = ";
+        cout << "v[" << i <<"]= ";
         adj[i].mostra();
-        cout << endl;
     }
-    cout << endl;
 }
 
 template <class T>
 void Grafo<T>::destroy(){
-    for(int i = 0; i <= getN(); i++){
+    for(int i = 0; i <= n; i++){
         adj[i].destroi();
     }
     delete adj;
-    getN() = getM() = 0;
+    //getN() = getM() = 0;
+    n = m = 0;
 }
 
 class DFS{
 private:
-    //Grafo<Vertex> g;
     int *cor;
-    int *d;//Vetor dinâmico de d//
-    int *f;//vetor dinâmico de f//
+    int *d;
+    int *f;
     int *pred;
+    void dfsVisita(Grafo<Vertex>&, Vertex);
 public:
     DFS();
-    void dfsVisita(Grafo<Vertex>&, Vertex);
-    /*DFS(int *cor, int *d, int *f, int *pred, Grafo<Vertex> g){
-        this->cor = cor;
-        this->d = d;
-        this->f = f;
-        this->pred = pred;
-        this->g = g;
-    }*/
-    //void setCor(int cor){
-        //this->cor = cor;
-    //}
-    
-    int *getCor(){
-        return cor;
-    }
-
-    //void setD(int d){
-        //this->d = d;
-    //}
-
-    int *getD(){
-        return d;
-    }
-
-    //void setF(int f){
-        //this->f = f;
-    //}
-
-    int *getF(){
-        return f;
-    }
-    void dfsPrincipal(Grafo<Vertex> &);
-
+    void dfsPrincipal(Grafo<Vertex>&);
 };
+
 DFS::DFS(){ }
 
 void DFS::dfsVisita(Grafo<Vertex> &g, Vertex u){
-    tempo = tempo + 1;
+    //tempo = tempo + 1;
+    tempo += 1;
     d[u] = tempo;
-    cor[u] = Cinza;/*
-    for(Vertex v = 1; v <= g.;v++){
+    cor[u] = Cinza;
+    Lista<Vertex> adj = g.getAdj()[u];
+    for(int i = 1; i <= adj.getTAM(); i++){
+        Vertex v;
         if(cor[v] == Branco){
             pred[v] = u;
             dfsVisita(g,v);
         }
-    }*/
-    No<int> *p = g.getAdj()[u].getPrim()->getProx();
-    Vertex v;
-    while(p != NULL){
-        if(cor[v] == Branco){
-            pred[v] = u;
-            dfsVisita(g,v);
-        }
-        p = p->getProx();
     }
     cor[u] = Preto;
-    tempo = tempo + 1;
+    //tempo = tempo + 1;
+    tempo += 1;
     f[u] = tempo;
 }
 
 void DFS::dfsPrincipal(Grafo<Vertex> &g){
-    //No<int> *p = g.getAdj()[u]
-    for(Vertex u = 1; u <= g.getN(); u++){
+    Vertex v;
+    Lista<Vertex> adj = g.getAdj()[v];
+    for(int u = 1; u <= adj.getTAM(); u++){
         cor[u] = Branco;
         pred[u] = 0;
     }
     tempo = 0;
-    for(Vertex u = 1; u <= g.getN(); u++){
+    for(int u = 1; u <= adj.getTAM(); u++){
         if(cor[u] == Branco){
             dfsVisita(g,u);
         }
@@ -256,13 +183,17 @@ int main(){
     int n,m;
     cout << "Ordem: ";
     cin >> n;
-    Grafo<int> g(n);
-    g.insertEdge(1,2);
-    g.insertEdge(2,3);
-    g.insertEdge(3,4);
+    Grafo<Vertex> g(n);
+    g.insereAresta(1,2);
+    g.insereAresta(1,4);
+    g.insereAresta(1,5);
+    g.insereAresta(2,3);
+    g.insereAresta(2,4);
+    g.insereAresta(3,4);
+    g.insereAresta(4,5);
     g.print();
-    DFS d;
-    //d.dfsVisita(g,1);
-    d.dfsPrincipal(g);
+    DFS dfs;
+    //dfs.dfsVisita(g,1);
+    dfs.dfsPrincipal(g);
     return 0;
 }
