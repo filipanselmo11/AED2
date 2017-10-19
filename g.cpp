@@ -1,98 +1,122 @@
 #include <iostream>
-#include <list>
-#include <algorithm> // função find
-#include <stack> // pilha para usar na DFS
- 
+#include <vector>
+
 using namespace std;
- 
-class Grafo
-{
-	int V; // número de vértices
-	list<int> *adj; // ponteiro para um array contendo as listas de adjacências
- 
+
+template <class T>
+class Lista{
+private:
+    vector<T> lista;
 public:
-	Grafo(int V); // construtor
-	void adicionarAresta(int v1, int v2); // adiciona uma aresta no grafo
- 
-	// faz uma DFS a partir de um vértice
-	void dfs(int v);
+    Lista(){}
+    ~Lista(){
+        destroy();
+    }
+    void insere(T elem);
+    void mostra();
+    void destroy();
 };
- 
-Grafo::Grafo(int V)
-{
-	this->V = V; // atribui o número de vértices
-	adj = new list<int>[V]; // cria as listas
+
+
+template <class T>
+void Lista<T>::insere(T elem) {
+  lista.push_back(elem);
 }
- 
-void Grafo::adicionarAresta(int v1, int v2)
-{
-	// adiciona vértice v2 à lista de vértices adjacentes de v1
-	adj[v1].push_back(v2);
+
+
+
+template <class T>
+void Lista<T>::mostra() {
+  for(unsigned int i = 0; i < lista.size(); i ++) {
+    cout << lista[i] << " ";
+  }
+  cout << endl;
 }
- 
-void Grafo::dfs(int v)
-{
-	stack<int> pilha;
-	bool visitados[V]; // vetor de visitados
- 
-	// marca todos como não visitados
-	for(int i = 0; i < V; i++)
-		visitados[i] = false;
- 
-	while(true)
-	{
-		if(!visitados[v])
-		{
-			cout << "Visitando vertice " << v << " ...\n";
-			visitados[v] = true; // marca como visitado
-			pilha.push(v); // insere "v" na pilha
-		}
- 
-		bool achou = false;
-		list<int>::iterator it;
- 
-		// busca por um vizinho não visitado
-		for(it = adj[v].begin(); it != adj[v].end(); it++)
-		{
-			if(!visitados[*it])
-			{
-				achou = true;
-				break;
-			}
-		}
- 
-		if(achou)
-			v = *it; // atualiza o "v"
-		else
-		{
-			// se todos os vizinhos estão visitados ou não existem vizinhos
-			// remove da pilha
-			pilha.pop();
-			// se a pilha ficar vazia, então terminou a busca
-			if(pilha.empty())
-				break;
-			// se chegou aqui, é porque pode pegar elemento do topo
-			v = pilha.top();
-		}
-	}
+
+
+template <class T>
+void Lista<T>::destroy() {
+  lista.clear();
+  lista.shrink_to_fit();
 }
- 
-int main()
-{
-	int V = 8;
- 
-	Grafo grafo(V);
- 
-	// adicionando as arestas
-	grafo.adicionarAresta(0, 1);
-	grafo.adicionarAresta(0, 2);
-	grafo.adicionarAresta(1, 3);
-	grafo.adicionarAresta(1, 4);
-	grafo.adicionarAresta(2, 5);
-	grafo.adicionarAresta(2, 6);
-	grafo.adicionarAresta(6, 7);
-	
-	grafo.dfs(0);
- 
-	return 0;
+
+
+
+class Grafo{
+private:
+  Lista<int> *adj;
+  int n,m;
+  void inicializa(int n);
+  void destroi();
+public:
+  Grafo(int n){
+    inicializa(n);
+  }
+  void insereAresta(int vertice1, int vertice2);
+  void mostra();
+  void setN(int n);
+  int getN();
+  void setM(int m);
+  int getM();
+};
+
+void Grafo::inicializa(int n){
+  /*if(this->n != 0){
+    destroi();
+  }*/
+  this->n = n;
+  adj = new Lista<int>[n+1];
+}
+
+void Grafo::setN(int n){
+  this->n = n;
+}
+
+int Grafo::getN(){
+  return n;
+}
+
+void Grafo::setM(int m){
+  this->m = m;
+}
+
+int Grafo::getM(){
+  return m;
+}
+
+void Grafo::insereAresta(int vertice1, int vertice2){
+  adj[vertice1].insere(vertice2);
+  adj[vertice2].insere(vertice1);
+  m++;
+}
+
+void Grafo::mostra(){
+  for(int i = 1; i < this->getN(); i ++) {
+       cout << "G[" << i <<"] = ";
+       adj[i].mostra();
+      }
+      cout << endl;
+}
+
+
+void Grafo::destroi() {
+  for(int i = 0; i <= this->n; i ++ ) {
+    adj[i].destroy();
+  }
+  delete[] adj;
+  n = m = 0;
+}
+
+
+int main(){
+  int n,m;
+  cout << "Ordem:  ";
+  cin >> n;
+  Grafo g(n);
+  g.insereAresta(1,2);
+  g.insereAresta(2,3);
+  g.insereAresta(3,4);
+  g.mostra();
+  return 0;
+
 }
