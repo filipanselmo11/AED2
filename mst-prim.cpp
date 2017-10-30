@@ -232,10 +232,14 @@ int main(){
 	f.enfileira(3);
   f.mostraFila();*/
   //Grafo<int> g(4);
-  Grafo g(3);
+  int n;
+  cin >> n;
+  Grafo g(n);
   g.insereEdge(1,2);
-  g.insereEdge(4,5);
-  g.insereEdge(12,21);
+  g.insereEdge(2,3);
+  g.insereEdge(3,4);
+  g.insereEdge(2,2);
+  g.insereEdge(5,3);
   g.mostraGrafo();
 	return 0;
 	
