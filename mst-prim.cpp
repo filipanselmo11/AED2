@@ -1,85 +1,11 @@
 #include <iostream>
 #include <vector>
+#include <climits>
 
 using namespace std;
 
-template <class T>
-class Lista {
-private:
-  vector<T> lista;
-public:
-  Lista() {}
-  ~Lista() {
-    destroy();
-  }
-  int getTAM();
-  void insere(T elemento);
-  void remove(T elemento);
-  int busca(T elemento);
-  void mostra();
-  void destroy();
-  T getElemento(int pos);
-  void escolhePos(int pos, T elemento);
-};
-
-
-template <class T>
-int Lista<T>::getTAM() {
-  return lista.size();
-}
-
-template <class T>
-void Lista<T>::insere(T elemento) {
-  lista.push_back(elemento);
-}
-
-template <class T>
-void Lista<T>::remove(T elemento) {
-  int posicao = busca(elemento);
-  if(posicao == -1) {
-    cout << "Impossivel remover!" << endl;
-  } else {
-    lista.erase(lista.begin() + posicao);
-  }
-}
-
-template <class T>
-int Lista<T>::busca(T elemento) {
-  int posicao = -1;
-  for(int i = 0; i < lista.size(); i ++) {
-    if(elemento == lista[i]) {
-      posicao = i;
-      i = lista.size();
-    }
-  }
-  return posicao;
-}
-
-template <class T>
-void Lista<T>::mostra() {
-  for(unsigned int i = 0; i < lista.size(); i ++) {
-    cout << lista[i] << " ";
-  }
-  cout << endl;
-}
-
-template <class T>
-void Lista<T>::destroy() {
-  lista.clear();
-  lista.shrink_to_fit();
-}
-
-
-template <class T>
-T Lista<T>::getElemento(int pos) {
-  return lista[pos];
-}
-
-template <class T>
-void Lista<T>::escolhePos(int pos, T elemento) {
-  lista[pos] = elemento;
-}
-
+typedef int Vertex;
+typedef int Weight;
 
 template <class T>
 class No {
@@ -152,69 +78,92 @@ bool Fila<T>::cheia() {
   }
 }
 
+template <class T>
 class Grafo{
 private:
-  Lista<int> *grafo;
-  int ordem, tam;
-  void inicializa(int);
-  void destroi();
+    int **mat;
+    int n,m;
 public:
-  Grafo(int ordem){
-    inicializa(ordem);
-  }
-  void insereEdge(int, int);
-  void mostraGrafo();
-  int getOrdem(){
-    return ordem;
-  }
-  int getTamanho(){
-    return tam;
-  }
-  Lista<int> *getGrafo(){
-    return grafo;
-  }
+    Grafo(int n){
+        this-> n = n;
+        this-> m = 0;
+        mat = new int*[n];
+        for(int i = 0; i < n; i++){
+            mat[i] = new int[n];
+        }
+        //inicializa();
+    }
+
+    int **getMat(){
+        return mat;
+    }
+
+    int getN(){
+        return n;
+    }
+
+    int getM(){
+        return m;
+    }
+
+    void inicializa();
+    void insereAresta(Vertex, Vertex, Weight);
+    void print();
 };
 
-void Grafo::inicializa(int ordem){
-  /*if(this->n == ){
-    destroi();
-  }*/
-  this->ordem = ordem;
-  this-> tam = 0;
-  grafo = new Lista<int>[ordem + 1];
+template <class T>
+void Grafo<T>::inicializa(){
+    for(int i = 0; i < n; i++){
+        for(int j = 0; i < n; j++){
+            mat[i][j] = 0;
+        }
+    }
 }
 
-void Grafo::destroi(){
-  for(int i = 0; i < this->ordem; i++){
-        grafo[i].destroy();
+template <class T>
+void Grafo<T>::insereAresta(Vertex u, Vertex v, Weight w){
+    mat[u][v] = w;
+    mat[v][u] = w;
+    m++;
+}
+
+template <class T>
+void Grafo<T>::print() {
+    for(int i = 0; i < n; i ++) {
+        for(int j = 0; j < n; j ++) {
+            cout << mat[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+class MST{
+private:
+  int inicial;//Vértice inicial//
+  int *vertice;//Vetor de vértices//
+  //Fila<int> f;
+  int peso;
+  int *pred;//Vetor de predecessor//
+public:
+  MST(){
+
   }
-  delete [] grafo;
-  ordem = tam = 0;
-}
+  void algoritmoMST(Grafo g, int inicial, int peso);
+};
 
-void Grafo::insereEdge(int v1, int v2){
-  int x = v2;
-  grafo[v1].insere(x);
-  x = v1;
-  grafo[v2].insere(x);
-  /*grafo[v1].insere(v2);
-  grafo[v2].insere(v1);
-  T x = v;
-	adj[u].insere(x);
-	x = u;
-	adj[v].insere(x);
-	m++;*/
-  tam++;
-}
-
-void Grafo::mostraGrafo(){
-  for(int i = 1; i < ordem; i++){
-    cout << "G" << "[" << i << "] = ";
-    grafo[i].mostra();
+void MST::algoritmoMST(Grafo g, int inicial, int peso){
+  for(int i = 0; i <= n; i++){
+      vertice[i] = INT_MAX;
+      pred[i] = 0;
   }
-  cout << endl;
-}
+  inicial = 0;
+  Fila<int> f;
+  while(){
+    
+  }
 
+}
+*/
 
 int main(){
 	/*Lista<int> l;
@@ -231,18 +180,15 @@ int main(){
 	f.enfileira(2);
 	f.enfileira(3);
   f.mostraFila();*/
-  //Grafo<int> g(4);
-  int n;
+ /* int n;
   cin >> n;
-  Grafo g(n);
-  g.insereEdge(1,2);
-  g.insereEdge(2,3);
-  g.insereEdge(3,4);
-  g.insereEdge(2,2);
-  g.insereEdge(5,3);
-  g.mostraGrafo();
+  Grafo<int> g(n);
+  g.insereAresta(1,1,2);
+  g.insereAresta(2,1,3); 
+  g.insereAresta(1,3,4);
+  g.print();*/
+
 	return 0;
 	
-
 }
 
