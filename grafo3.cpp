@@ -50,8 +50,8 @@ void Grafo<T>::inicializa(){
 template <class T>
 void Grafo<T>::insereAresta(Vertex u, Vertex v, Weight w){
     mat[u][v] = w;
-    mat[v][u] = w;
-    m++;
+    //mat[v][u] = w;
+   // m++;
 }
 
 template <class T>
@@ -92,6 +92,8 @@ int main(){
     //cin >> n;
     Grafo<int> g(3);
     g.insereAresta(1,1,2);
+    g.insereAresta(2,2,2);
+    g.insereAresta(1,0,3);
     //g.insereAresta(2,2,2);
     // g.insereAresta(3,3,2);
     g.print();

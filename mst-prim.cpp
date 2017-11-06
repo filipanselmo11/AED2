@@ -1,194 +1,208 @@
 #include <iostream>
-#include <vector>
 #include <climits>
 
 using namespace std;
 
-typedef int Vertex;
-typedef int Weight;
-
 template <class T>
-class No {
+class No{
 private:
-  T elemento;
-  No *prox;
+    T item;
+    No *prox;
 public:
-  No() {  this->prox = NULL;  }
-  No(T elemento) { this->elemento = elemento;  this->prox = NULL;  }
-  void setProx(No<T> *prox) { this->prox = prox;  }
-  No<T>* getProx() { return prox;  }
-  void setElemento(T elemento) {  this->elemento = elemento;  }
-  T getElemento() {  return elemento; }
-};
-
-template <class T>
-class Fila {
-private:
-  No<T> *frente, *tras;
-public:
-  Fila() { frente = new No<T>();  frente->setProx(NULL);   tras = frente; }
-  void enfileira(T elemento);
-  void desenfileira(T &elemento);
-  void mostraFila();
-  bool cheia();
-};
-
-
-/*  ----- Métodos da Fila ----- */
-
-template <class T>
-void Fila<T>::enfileira(T elemento) {
-  tras->setProx(new No<T>());
-  tras = tras->getProx();
-  tras->setElemento(elemento);
-  tras->setProx(NULL);
-}
-
-template <class T>
-void Fila<T>::desenfileira(T &elemento) {
-  No<T> *aux = frente;
-  frente = frente->getProx();
-  elemento = frente->getElemento();
-  delete aux;
-}
-
-template <class T>
-void Fila<T>::mostraFila() {
-  No<T> *aux;
-  aux = frente->getProx();
-  if(aux == NULL) {
-    cout << "Fila vazia";
-  } else {
-    while (aux != NULL) {
-      cout << aux->getElemento() << " ";
-      aux = aux->getProx();
+    No(){
+        this->prox = NULL;
     }
-  }
-  cout << endl;
+    No(T item){
+        this->item = item;
+        this->prox = NULL;
+    }
+    void setItem(T item){
+        this->item = item;
+    }
+    T getItem(){
+        return item;
+    }
+    void setProx(No *prox){
+        this->prox = prox;
+    }
+    No *getProx(){
+        return prox;
+    }
+};
+
+template <class T>
+class Lista{
+private:
+    int taml;
+    No<T> *prim, *ult;
+    bool vazia();
+    No<T> *pred(No<T> *r);
+public:
+    Lista(){
+        taml = 0;
+        prim = new No<T>();
+        prim->setProx(NULL);
+        ult = prim;
+    }
+    int getTam();
+    void insere(T item);
+    void mostraLista();
+    No<T> *busca(T item);
+    void remove(No<T> *r, T &item);
+};
+template <class T>
+bool Lista<T>::vazia(){
+    return prim == ult;
 }
 
 template <class T>
-bool Fila<T>::cheia() {
-  No<T> *aux;
-  aux = frente->getProx();
-  if(aux == NULL) {
-    return false;
-  } else {
-    return true;
-  }
+int Lista<T>::getTam(){
+    return taml;
 }
 
 template <class T>
+No<T>*Lista<T>::pred(No<T> *r){
+    No<T> *aux = prim->getProx();
+    while(aux->getProx() != r){
+        aux = aux->getProx();
+    }
+    return aux;
+}
+
+template <class T>
+void Lista<T>::insere(T item){
+    ult ->setProx(new No<T>());
+    ult = ult->getProx();
+    ult->setProx(NULL);
+    ult->setItem(item);
+    taml++;
+}
+
+template <class T>
+void Lista<T>::mostraLista(){
+    No<T> *aux = prim->getProx();
+    while(aux != NULL){
+        cout << aux->getItem() << " ";
+        aux = aux->getProx();
+    }
+    cout << endl;
+}
+
+template <class T>
+No<T>*Lista<T>::busca(T item){
+    No<T> *aux = prim->getProx();
+    while(aux != NULL && aux->getItem() != item){
+        aux = aux->getProx();
+    }
+    return aux;
+}
+
+template <class T>
+void Lista<T>::remove(No<T> *r, T &item){
+    if(vazia() || r == NULL || r == prim){
+        cout << "Impossível remoção" << endl;
+    }
+    else{
+        item = r->getItem();
+        No<T> *aux = pred(r);
+        if(aux->getProx() == NULL) ult = aux;
+        delete r;
+    }
+}
+
 class Grafo{
 private:
-    int **mat;
-    int n,m;
+    int ordem, tamanho;
+    Lista<int> *grafo;
+    void inicializa(int n);
 public:
     Grafo(int n){
-        this-> n = n;
-        this-> m = 0;
-        mat = new int*[n];
-        for(int i = 0; i < n; i++){
-            mat[i] = new int[n];
-        }
-        //inicializa();
+        inicializa(n);
     }
-
-    int **getMat(){
-        return mat;
-    }
-
-    int getN(){
-        return n;
-    }
-
-    int getM(){
-        return m;
-    }
-
-    void inicializa();
-    void insereAresta(Vertex, Vertex, Weight);
-    void print();
+    void setOrdem(int ordem);
+    int getOrdem();
+    void setTamanho(int tamanho);
+    int getTamanho();
+    void insereEdge(int vertice1, int vertice2);
+    void mostraGrafo();
 };
 
-template <class T>
-void Grafo<T>::inicializa(){
-    for(int i = 0; i < n; i++){
-        for(int j = 0; i < n; j++){
-            mat[i][j] = 0;
-        }
+void Grafo::inicializa(int ordem){
+    this->ordem = ordem;
+    this-> tamanho = 0;
+    grafo = new Lista<int>[ordem + 1];
+}
+
+void Grafo::setOrdem(int ordem){
+    this->ordem = ordem;
+}
+
+int Grafo::getOrdem(){
+    return ordem;
+}
+
+void Grafo::setTamanho(int tamanho){
+    this->tamanho = tamanho;
+}
+
+int Grafo::getTamanho(){
+    return tamanho;
+}
+
+void Grafo::insereEdge(int vertice1, int vertice2){
+    grafo[vertice1].insere(vertice2);
+    grafo[vertice2].insere(vertice1);
+    tamanho++;
+}
+
+void Grafo::mostraGrafo(){
+    for(int i = 1; i <= ordem; i++){
+        cout << "G[" << i << "] = ";
+        grafo[i].mostraLista();
     }
+    cout << endl;
 }
 
-template <class T>
-void Grafo<T>::insereAresta(Vertex u, Vertex v, Weight w){
-    mat[u][v] = w;
-    mat[v][u] = w;
-    m++;
-}
-
-template <class T>
-void Grafo<T>::print() {
-    for(int i = 0; i < n; i ++) {
-        for(int j = 0; j < n; j ++) {
-            cout << mat[i][j] << " ";
-        }
-        cout << endl;
-    }
-}
-
-class MST{
+class AlgoritmoMST{
 private:
-  int inicial;//Vértice inicial//
-  int *vertice;//Vetor de vértices//
-  //Fila<int> f;
-  int peso;
-  int *pred;//Vetor de predecessor//
-public:
-  MST(){
+    int ordem;
+    int *chave;
+    int *pai;
+    int *pesos;
+    void inicia();
 
-  }
-  void algoritmoMST(Grafo g, int inicial, int peso);
+public:
+    AlgoritmoMST(int ordem);
+    MST(Grafo *g, int *pesos, int verticeInicial);
 };
 
-void MST::algoritmoMST(Grafo g, int inicial, int peso){
-  for(int i = 0; i <= n; i++){
-      vertice[i] = INT_MAX;
-      pred[i] = 0;
-  }
-  inicial = 0;
-  Fila<int> f;
-  while(){
-    
-  }
-
+void AlgoritmoMST::inicia(){
+    for(int i = 0; i <= ordem; i++){
+        chave[i] = 0;
+        pai[i] = 0;
+        pesos[i] = 0;
+    }
 }
-*/
+
+AlgoritmoMST::AlgoritmoMST(int ordem){
+    this->ordem = ordem;
+    chave = new int[ordem + 1];
+    pai = new int[ordem + 1];
+    pesos = new int[ordem + 1];
+    inicia();
+}
 
 int main(){
-	/*Lista<int> l;
-	l.insere(1);
-	l.insere(12);
-	l.insere(133);
-	l.insere(1444);
-	l.mostra();
-	//l.getElemento(3);
-	//l.mostra();
-	//l.escolhePos(1,12);*/
-	/*Fila<int> f;
-	f.enfileira(1);
-	f.enfileira(2);
-	f.enfileira(3);
-  f.mostraFila();*/
- /* int n;
-  cin >> n;
-  Grafo<int> g(n);
-  g.insereAresta(1,1,2);
-  g.insereAresta(2,1,3); 
-  g.insereAresta(1,3,4);
-  g.print();*/
-
-	return 0;
-	
+    /*Lista<int> l;
+    l.insere(1);
+    l.insere(2);
+    l.insere(3);
+    l.insere(4);
+    l.mostraLista();*/
+    Grafo g(4);
+    g.insereEdge(1,2);
+    g.insereEdge(2,3);
+    g.insereEdge(4,2);
+    g.mostraGrafo();
+    return 0;
 }
-

@@ -247,7 +247,7 @@ template <class T>
 T List<T>::getElement(int position) {
   Node<T> *aux = prim->getProx();
   for(unsigned int i = 0; (int) i < size; i ++) {
-    if( (int) i == position) {
+    if((int) i == position) {
       break;
     }
     aux = aux->getProx();

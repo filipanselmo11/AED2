@@ -2,7 +2,7 @@
 #include <vector>
 #include <cmath>
 #include <climits>
-#define NIL -1
+
 using namespace std;
 //const int tamH = 0;
 //vector<int> v;
@@ -30,33 +30,33 @@ public:
     void heapFica(vector<int> &v, int i, int tamheap);
     //void constroiHeap(vector<int> &v, int &tamheap)
     //void heapSort(vector<int> &v)
-    int heapMax(vector<int> &v);
-    int extrairMax(vector<int> &v);
+    int heapMin(vector<int> &v);
+    int extrairMin(vector<int> &v);
     //void maxHeapfy(vector<int> &v, int x);
-    void insereChave(vector<int> &v, int i, int chave);
-    void insereMax(vector<int> &v, int chave);
+    //void insereChave(vector<int> &v, int i, int chave);
+    //void insereMax(vector<int> &v, int chave);
     void print(vector<int> &v);
 
 };
 
-int Heap::heapMax(vector<int> &v){
-    int max = 0;
-    for(int i = 1; i < v.size(); i++){
-        max =  v[i];
+int Heap::heapMin(vector<int> &v){
+    int min = 0;
+    for(int i = 0; i > v.size(); i++){
+        min =  v[i];
     }
-    return max;
+    return min;
 }
 
-int Heap::extrairMax(vector<int> &v){
+int Heap::extrairMin(vector<int> &v){
     if(v.size() < 1){
         cout << "Fluxo subterraneo" << endl;
     }
-    int max = v[1];
+    int min = v[1];
     tamH = v.size() - 1;
     heapFica(v, 1,tamH);
-    return max;
+    return min;
 }
-
+/*
 void Heap::insereChave(vector<int> &v, int i, int chave ){
      if(chave < v[i]){
         cout << "erro: a nova chave é menor que a chave atual" << endl;
@@ -66,20 +66,20 @@ void Heap::insereChave(vector<int> &v, int i, int chave ){
         swap(v[i], v[Pai(i)]);
         i = Pai(i);
     }
-}
+}*/
 
 void Heap::print(vector<int> &v){
-    for(int i = 1; i < v.size(); i++){
+    for(int i = 0; i < v.size(); i++){
         cout << v[i] << " ";
     }
     cout << endl;
 }
-
+/*
 void Heap::insereMax(vector<int> &v, int chave){
     tamH += 1;
     v[tamH] = -INT_MAX;
     insereChave(v, tamH, chave);
-}
+}*/
 
 void Heap::heapFica(vector<int> &v, int i, int tamheap){
 	int l = Esq(i);
@@ -116,11 +116,12 @@ void Heap::heapSort(vector<int> &v){
 }*/
 
 int main(){
-    vector<int> v = {NIL, 15, 13, 9, 5, 12, 8, 7, 4, 0, 6, 2, 1};
+    vector<int> v = {15, 13, 9, 5, 12, 8, 7, 4, 0, 6, 2, 1};
     Heap heap;
     //heap.insereChave(v, 1, 90);
     //heap.insereMax(v, 100);
+    cout << heap.heapMin(v) << endl;
     heap.print(v);
-    cout << heap.extrairMax(v) << endl;
+    //cout << heap.extrairMin(v) << endl;
     return 0;
 }
