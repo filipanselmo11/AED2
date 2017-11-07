@@ -192,6 +192,10 @@ AlgoritmoMST::AlgoritmoMST(int ordem){
     inicia();
 }
 
+void AlgoritmoMST::MST(Grafo *g, int *pesos, int verticeInicial){
+    
+}
+
 int main(){
     /*Lista<int> l;
     l.insere(1);

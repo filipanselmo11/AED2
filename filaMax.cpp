@@ -85,11 +85,11 @@ void Heap::heapFica(vector<int> &v, int i, int tamheap){
 	int l = Esq(i);
 	int r = Dir(i);
 	int maior = 0;
-	if(l <= tamheap && v[l] > v[i]){
+	if(l <= tamheap && v[l] < v[i]){
 		maior = l;
 	}
 	else maior = i;
-    if(r <= tamheap && v[r] > v[maior]){
+    if(r <= tamheap && v[r] < v[maior]){
     	maior = r;
 	}
 	if(maior != i){
